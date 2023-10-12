@@ -1,0 +1,35 @@
+version: '3'
+
+services:
+  vestigo-nicegui:
+    container_name: vestigo-nicegui
+    build: 
+      context: .
+      dockerfile: Dockerfile
+    restart: always
+    ports:
+      - 80:8080
+    volumes:
+      - ./:/${PROJECT}/
+    environment:
+      - COLOR_BG0=${COLOR_BG0}
+      - COLOR_BG1=${COLOR_BG1}
+      - COLOR_GREEN=${COLOR_GREEN}
+      - COLOR_RED=${COLOR_RED}
+      - COLOR_BLUE=${COLOR_BLUE}
+      - COLOR_FG=${COLOR_FG}
+    command: python main.py
+  vestigo-postgres:
+    restart: always
+    container_name: vestigo-postgres
+    image: postgres:16rc1-alpine
+    environment:
+      POSTGRES_DB: ${POSTGRES_DB}
+      POSTGRES_USER: ${POSTGRES_USER}
+      POSTGRES_PASSWORD: ${POSTGRES_PASSWORD}
+      PGDATA: ${PGDATA}
+    volumes:
+      - ./postgres_data:${PGDATA}
+    ports:
+      - 5083:5083
+    command: -p 5083
